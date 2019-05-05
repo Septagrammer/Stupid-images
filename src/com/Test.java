@@ -1,14 +1,7 @@
 package com;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Random;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -22,13 +15,16 @@ public class Test {
 		for (int i = 0; i < 999999; i++) {
 
 			try {	
+				
 				Document doc = Jsoup.connect(new String(Utils.generateUrl())).get();
 				Elements img = doc.getElementsByTag("img");
 				String src = img.first().absUrl("src");
 				Utils.saveImage(src);
 				System.out.println(count + 1 + ". image found on " + i + 1 + " iteration");
+				System.out.println(Utils.detect(src));
 				count++;
 				Thread.sleep(1);
+				
 			} catch (FileAlreadyExistsException ex) {
 				continue;
 			} catch (IOException ex) {
