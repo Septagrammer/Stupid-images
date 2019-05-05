@@ -17,15 +17,15 @@ import org.jsoup.select.Elements;
 public class Test {
 
 	public static void main(String[] args) throws IOException {
-		
+
 		int count = 0;
 		for (int i = 0; i < 999999; i++) {
 
 			try {	
-				Document doc = Jsoup.connect(new String(generateUrl())).get();
+				Document doc = Jsoup.connect(new String(Utils.generateUrl())).get();
 				Elements img = doc.getElementsByTag("img");
 				String src = img.first().absUrl("src");
-				saveImage(src);
+				Utils.saveImage(src);
 				System.out.println(count + 1 + ". image found on " + i + 1 + " iteration");
 				count++;
 				Thread.sleep(1);
@@ -41,31 +41,5 @@ public class Test {
 		System.out.println("Totally " + count + " images found.");
 	}
 	
-	public static void saveImage(String urlPart) throws IOException {
 
-		URL url = new URL(urlPart);
-		HttpURLConnection myURLConnection = (HttpURLConnection) url.openConnection();
-		myURLConnection.setRequestProperty("User-Agent", "Chrome/51.0.2704.63");
-		InputStream in = myURLConnection.getInputStream();
-
-		Path path = Paths.get("D:\\Images\\" + urlPart.replaceAll("[/:.]", "") + ".png");
-		Files.copy(in, path);
-	}
-	
-	public static String generateUrl() {
-
-		int targetStringLength = 7;
-		//String all = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		String all = "abcdefghijklmnopqrstuvwxyz0123456789";
-
-		Random random = new Random();
-		StringBuilder buffer = new StringBuilder(targetStringLength);
-		for (int i = 0; i < targetStringLength; i++) {
-			int randomLimitedInt =(int) (random.nextFloat() * all.length());
-			buffer.append(all.charAt(randomLimitedInt));
-		}
-		String generatedString = "http://prnt.sc/" + buffer.toString();
-
-		return generatedString;
-	}
 }
