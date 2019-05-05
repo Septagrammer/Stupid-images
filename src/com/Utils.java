@@ -1,5 +1,6 @@
 package com;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -13,6 +14,7 @@ import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.leptonica.PIX;
 import org.bytedeco.leptonica.global.lept;
 import org.bytedeco.tesseract.TessBaseAPI;
+import org.bytedeco.tesseract.Tesseract;
 
 public class Utils {
     
