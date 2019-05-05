@@ -10,7 +10,6 @@ import org.jsoup.select.Elements;
 public class Test {
 
 	public static void main(String[] args) throws IOException {
-
 		int count = 0;
 		for (int i = 0; i < 999999; i++) {
 

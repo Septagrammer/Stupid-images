@@ -10,25 +10,25 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Random;
 
-import org.bytedeco.javacpp.BytePointer;
-import org.bytedeco.leptonica.PIX;
-import org.bytedeco.leptonica.global.lept;
-import org.bytedeco.tesseract.TessBaseAPI;
-import org.bytedeco.tesseract.Tesseract;
+import net.sourceforge.tess4j.ITesseract;
+import net.sourceforge.tess4j.Tesseract1;
+import net.sourceforge.tess4j.TesseractException;
 
 public class Utils {
     
     public static String detect(String imgPath) {
     	
-    	TessBaseAPI api = new TessBaseAPI();
-    	api.Init(System.getProperty("user.dir") + "\\tessdata-master\\", "eng");
-    	PIX image = lept.pixRead(imgPath);
-    	api.SetImage(image);
-    	BytePointer bp = api.GetUTF8Text();
-    	String output = bp.getString();
-    	api.close();
+    	ITesseract instance = new Tesseract1();
+    	instance.setDatapath("D:\\Media\\Sync\\Workspace\\Images\\tessdata");
     	
-    	return output;
+    	String result = "";
+		try {
+			result = instance.doOCR(new File(imgPath));
+		} catch (TesseractException e) {
+			e.printStackTrace();
+		}
+    	
+    	return result;
     }
     
 	public static void saveImage(String urlPart) throws IOException {
