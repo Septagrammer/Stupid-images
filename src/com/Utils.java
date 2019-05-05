@@ -8,7 +8,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Random;
+import java.util.ArrayList;
 
 import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract1;
@@ -16,7 +16,7 @@ import net.sourceforge.tess4j.TesseractException;
 
 public class Utils {
     
-    public static String detect(String imgPath) {
+    public static String detectText(String imgPath) {
     	
     	ITesseract instance = new Tesseract1();
     	instance.setDatapath("D:\\Media\\Sync\\Workspace\\Images\\tessdata");
@@ -40,24 +40,26 @@ public class Utils {
 
 		Path path = Paths.get("D:\\Images\\" + urlPart.replaceAll("[/:.]", "") + ".png");
 		Files.copy(in, path);
+		
 		return path.toString();
 	}
 	
-	public static String generateUrl() {
-
-		int targetStringLength = 7;
-		//String all = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		String all = "abcdefghijklmnopqrstuvwxyz0123456789";
-
-		Random random = new Random();
-		StringBuilder buffer = new StringBuilder(targetStringLength);
-		for (int i = 0; i < targetStringLength; i++) {
-			int randomLimitedInt =(int) (random.nextFloat() * all.length());
-			buffer.append(all.charAt(randomLimitedInt));
-		}
-		String generatedString = "http://prnt.sc/" + buffer.toString();
-
-		return generatedString;
-	}
+	public static Generator initGens(ArrayList<Character> symbols, int level) {
+		
+        if (level>0) {
+            return new Generator(symbols, initGens(symbols, level-1));
+        }
+        
+        return null;
+    }
+     
+    public static ArrayList<Character> generateSymbols() {
+        ArrayList<Character> symbols = new ArrayList<Character>();
+        for (char c='0'; c<='9'; c++) symbols.add(c);
+        for (char c='A'; c<='Z'; c++) symbols.add(c);
+        for (char c='a'; c<='z'; c++) symbols.add(c);
+        
+        return symbols;
+    }
 
 }

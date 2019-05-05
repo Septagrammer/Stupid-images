@@ -12,66 +12,46 @@ import org.jsoup.select.Elements;
 
 public class Test {
 
-	public static final int MAX_KEY_SIZE = 5;
+	public static final int MAX_KEY_SIZE = 7;
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
     	
-    	ArrayList<Character> symbols = generateSymbols();
-         
-        Generator gen = initGens(symbols, MAX_KEY_SIZE);
-         
-        StringBuilder key = new StringBuilder();
-        while(true) {
-        	System.out.println(key);
-            gen.next();
-            key.setLength(0);
-            gen.getKey(key);
-        }    
-    }
- 
-    private static Generator initGens(ArrayList<Character> symbols, int level) {
-        if (level>0) {
-            return new Generator(symbols, initGens(symbols, level-1));
-        }
-        return null;
-    }
-     
-    private static ArrayList<Character> generateSymbols() {
-        ArrayList<Character> symbols = new ArrayList<Character>();
-        for (char c='0'; c<='9'; c++) symbols.add(c);
-        for (char c='A'; c<='Z'; c++) symbols.add(c);
-        for (char c='a'; c<='z'; c++) symbols.add(c);
-        return symbols;
-    }
-	
-	public static void find() throws IOException {
-		FileUtils.cleanDirectory(new File("D:\\Images\\")); 
-		System.out.println("Search started");
+    	System.out.println("Search started");
+    	
+    	//clean directory for images before start
+    	FileUtils.cleanDirectory(new File("D:\\Images\\")); 
+		ArrayList<Character> symbols = Utils.generateSymbols();
+        
+        Generator gen = Utils.initGens(symbols, MAX_KEY_SIZE);
+        StringBuilder URLpart = new StringBuilder();
+        
 		int count = 0;
 		while (count < 10) {
 			try {	
 				
-				Document doc = Jsoup.connect(new String(Utils.generateUrl())).get();
+				//generate part of URL
+				gen.next();
+	            URLpart.setLength(0);
+	            gen.getKey(URLpart);
+	            
+	            //try to find image on generated URL 
+				Document doc = Jsoup.connect(new String("http://prnt.sc/" + URLpart)).get();
 				Elements img = doc.getElementsByTag("img");
 				String src = img.first().absUrl("src");
 				String pathToFile = Utils.saveImage(src);
-				System.out.println(count + 1 + ". image found;" );
-				System.out.println(src);
-				System.out.println(Utils.detect(pathToFile));
 				count++;
-				Thread.sleep(1);
 				
+				//try to find text on image 
+				System.out.println(count + 1 + ". image found; \nText:" );
+				System.out.println(Utils.detectText(pathToFile));
+
 			} catch (FileAlreadyExistsException ex) {
 				continue;
 			} catch (IOException ex) {
 				System.err.println("There was an error:\r\n" + ex.toString());
-			} catch (InterruptedException e) {
-				e.printStackTrace();
 			}
 		}
 		
-		System.out.println("Totally " + count + " images found.");
-	}
-	
-
+		System.out.println("Totally " + count + " images found.");  
+    }
 }
