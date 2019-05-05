@@ -1,5 +1,6 @@
 package com;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -9,24 +10,26 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Random;
 
-import org.bytedeco.javacpp.BytePointer;
-import org.bytedeco.leptonica.PIX;
-import org.bytedeco.leptonica.global.lept;
-import org.bytedeco.tesseract.TessBaseAPI;
+import net.sourceforge.tess4j.Tesseract;
+
 
 public class Utils {
     
     public static String detect(String imgPath) {
-    	
-    	TessBaseAPI api = new TessBaseAPI();
-    	api.Init(System.getProperty("user.dir") + "\\tessdata-master\\", "eng");
-    	PIX image = lept.pixRead(imgPath);
-    	api.SetImage(image);
-    	BytePointer bp = api.GetUTF8Text();
-    	String output = bp.getString();
-    	api.close();
-    	
-    	return output;
+    
+    	try 
+        {
+    		Tesseract instance = Tesseract.getInstance();
+    		instance.setDatapath(System.getProperty("user.dir") + "\\tessdata-master\\");
+        	String text = instance.doOCR(new File(imgPath));
+        	
+        	return text;
+        } 
+        catch (Exception e) 
+        {
+           e.getMessage();
+           return "Error while reading image";
+        }
     }
     
 	public static void saveImage(String urlPart) throws IOException {
