@@ -10,17 +10,18 @@ import org.jsoup.select.Elements;
 public class Test {
 
 	public static void main(String[] args) throws IOException {
+		System.out.println("Search started");
 		int count = 0;
-		for (int i = 0; i < 999999; i++) {
-
+		while (count < 10) {
 			try {	
 				
 				Document doc = Jsoup.connect(new String(Utils.generateUrl())).get();
 				Elements img = doc.getElementsByTag("img");
 				String src = img.first().absUrl("src");
-				Utils.saveImage(src);
-				System.out.println(count + 1 + ". image found on " + i + 1 + " iteration");
-				System.out.println(Utils.detect(src));
+				String pathToFile = Utils.saveImage(src);
+				System.out.println(count + 1 + ". image found;" );
+				System.out.println(src);
+				System.out.println(Utils.detect(pathToFile));
 				count++;
 				Thread.sleep(1);
 				

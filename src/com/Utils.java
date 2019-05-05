@@ -31,7 +31,7 @@ public class Utils {
     	return result;
     }
     
-	public static void saveImage(String urlPart) throws IOException {
+	public static String saveImage(String urlPart) throws IOException {
 
 		URL url = new URL(urlPart);
 		HttpURLConnection myURLConnection = (HttpURLConnection) url.openConnection();
@@ -40,6 +40,7 @@ public class Utils {
 
 		Path path = Paths.get("D:\\Images\\" + urlPart.replaceAll("[/:.]", "") + ".png");
 		Files.copy(in, path);
+		return path.toString();
 	}
 	
 	public static String generateUrl() {
