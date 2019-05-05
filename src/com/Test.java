@@ -18,27 +18,17 @@ public class Test {
 
 	public static void main(String[] args) throws IOException {
 		
-		/*
-		 * Thread six = new Thread() {
-		 * 
-		 * @Override public void run() {
-		 * 
-		 * } };
-		 */
-		
 		int count = 0;
 		for (int i = 0; i < 999999; i++) {
 
 			try {	
-
-				Document doc = Jsoup.connect(new String("http://prnt.sc/" + generateUrl())).get();
+				Document doc = Jsoup.connect(new String(generateUrl())).get();
 				Elements img = doc.getElementsByTag("img");
 				String src = img.first().absUrl("src");
 				saveImage(src);
-				System.out.println(count + "  " + i);
+				System.out.println(count + 1 + ". image found on " + i + 1 + " iteration");
 				count++;
 				Thread.sleep(1);
-
 			} catch (FileAlreadyExistsException ex) {
 				continue;
 			} catch (IOException ex) {
@@ -47,7 +37,8 @@ public class Test {
 				e.printStackTrace();
 			}
 		}
-		System.out.println(count + " images found.");
+		
+		System.out.println("Totally " + count + " images found.");
 	}
 	
 	public static void saveImage(String urlPart) throws IOException {
@@ -73,7 +64,7 @@ public class Test {
 			int randomLimitedInt =(int) (random.nextFloat() * all.length());
 			buffer.append(all.charAt(randomLimitedInt));
 		}
-		String generatedString = buffer.toString();
+		String generatedString = "http://prnt.sc/" + buffer.toString();
 
 		return generatedString;
 	}
